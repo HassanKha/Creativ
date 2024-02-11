@@ -86,6 +86,6 @@ app.post("/graph", async (req, res) => {
 });
 
 
-app.listen(port, '0.0.0.0', () => {
+app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
