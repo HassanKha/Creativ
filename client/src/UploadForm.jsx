@@ -26,7 +26,7 @@ function UploadForm() {
     console.log(formData);
     try {
       const response = await axios.post(
-        "https://backend-8fks.onrender.com/upload",
+        "http://localhost:3001/upload",
         formData,
         {
           headers: {
@@ -73,7 +73,7 @@ const ages = data.ages;
 
     try {
       const response = await axios.post(
-        "https://backend-8fks.onrender.com/graph",
+        "http://localhost:3001/graph",
         {ages:ageGroupCounts},
         {
           headers: {
@@ -125,7 +125,7 @@ const ages = data.ages;
           <div className="font-medium"> Age Average</div>
           <div className="text-gray-100 font-medium border p-1">{ data ? data.ageRange : '??'}</div>
         </div>
-        <button onClick={ShowGraph} className="outline-none bg-violet-50 px-6 py-3 cursor-pointer rounded-md font-sans text-violet-500 text-sm font-medium hover:bg-violet-200 " type="submit">Show Graphs</button>
+        { data && data.ages &&<button onClick={ShowGraph} className="outline-none bg-violet-50 px-6 py-3 cursor-pointer rounded-md font-sans text-violet-500 text-sm font-medium hover:bg-violet-200 " type="submit">Show Graphs</button>}
         <div>{imageSrc && <img className="shadow-2xl p-2" src={imageSrc} alt="Age Distribution" />}</div>
       </div>
     </div>
@@ -133,3 +133,4 @@ const ages = data.ages;
 }
 
 export default UploadForm;
+
