@@ -60,6 +60,50 @@ app.post("/upload", upload.single("csvFile"), async (req, res) => {
   }
 });
 
+function generateBarChart(data, width, height) {
+  const svgStart = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">`;
+  let bars = '';
+
+  // Calculate dimensions
+  const maxDataValue = Math.max(...Object.values(data));
+
+  // Generate bars and labels
+  let index = 0;
+  for (const [ageGroup, count] of Object.entries(data)) {
+    const barHeight = (count / maxDataValue) * height;
+    const x = index * (width / Object.keys(data).length);
+    const y = height - barHeight;
+    const barWidth = width / Object.keys(data).length;
+
+    // Add styling to the bars
+    const color = getRandomColor();
+    bars += `<rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" fill="${color}" stroke="black" stroke-width="2" />`;
+
+    // Add text label for age group and count
+    const label = `${ageGroup}: ${count}`;
+    const labelX = x + barWidth / 2;
+    const labelY = y + barHeight / 2;
+    bars += `<text x="${labelX}" y="${labelY}" font-family="cursive" font-size="18" fill="white" text-anchor="middle">${label}</text>`;
+
+    index++;
+  }
+
+  const svgEnd = '</svg>';
+
+  // Combine SVG elements
+  const svgContent = svgStart + bars + svgEnd;
+  return svgContent;
+}
+// Function to generate random color
+function getRandomColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 
 app.post("/graph", async (req, res) => {
   try {
@@ -70,15 +114,14 @@ app.post("/graph", async (req, res) => {
   
     console.log(req.body.ages);
      const configuration = req.body.ages;
-     console.log(configuration);
-     const canvasRenderService = new ChartJSNodeCanvas({
-      width: 800,
-      height: 600,
-    });
-    const image = await canvasRenderService.renderToBuffer(configuration);
-    const base64ImageData = Buffer.from(image).toString("base64");
+    // console.log(configuration);
 
-     res.json({ success: true , image: base64ImageData});
+
+    const svgContent = generateBarChart(configuration, 800, 600);
+    //console.log(svgContent);
+    fs.writeFileSync('bar_chart.svg', svgContent);
+    
+     res.json({ success: true , image: svgContent});
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ success: false, message: "Internal server error." });
