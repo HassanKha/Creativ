@@ -26,7 +26,7 @@ function UploadForm() {
     console.log(formData);
     try {
       const response = await axios.post(
-        "http://localhost:3001/upload",
+        "https://backend-8fks.onrender.com/upload",
         formData,
         {
           headers: {
@@ -104,7 +104,7 @@ const ages = data.ages;
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/graph",
+        "https://backend-8fks.onrender.com/graph",
         {ages:configuration},
         {
           headers: {
