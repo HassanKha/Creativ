@@ -67,45 +67,14 @@ const ages = data.ages;
 
    
 
-    const configuration = {
-      type: "bar",
-      data: {
-        labels: Object.keys(ageGroupCounts),
-        datasets: [
-          {
-            label: "Age Distribution",
-            data: Object.values(ageGroupCounts),
-            backgroundColor: [
-              "rgba(255, 99, 132, 0.5)",
-              "rgba(54, 162, 235, 0.5)",
-              "rgba(255, 206, 86, 0.5)",
-              "rgba(75, 192, 192, 0.5)",
-            ],
-            borderColor: [
-              "rgba(255, 99, 132, 1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(255, 206, 86, 1)",
-              "rgba(75, 192, 192, 1)",
-            ],
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-      },
-    };
+    
 
 
 
     try {
       const response = await axios.post(
         "https://backend-8fks.onrender.com/graph",
-        {ages:configuration},
+        {ages:ageGroupCounts},
         {
           headers: {
             "Content-Type": "application/json",
@@ -115,7 +84,7 @@ const ages = data.ages;
       console.log(response.data);
       const ImageButtering = response.data.image;
 
-      setImageSrc(`data:image/png;base64,${ImageButtering}`);
+      setImageSrc(`data:image/svg+xml;utf8,${encodeURIComponent(ImageButtering)}`);
     
       setMessage("uploaded successfully");
     } catch (error) {
@@ -157,7 +126,7 @@ const ages = data.ages;
           <div className="text-gray-100 font-medium border p-1">{ data ? data.ageRange : '??'}</div>
         </div>
         <button onClick={ShowGraph} className="outline-none bg-violet-50 px-6 py-3 cursor-pointer rounded-md font-sans text-violet-500 text-sm font-medium hover:bg-violet-200 " type="submit">Show Graphs</button>
-        <div>{imageSrc && <img className="shadow-xl" src={imageSrc} alt="Age Distribution" />}</div>
+        <div>{imageSrc && <img className="shadow-2xl p-2" src={imageSrc} alt="Age Distribution" />}</div>
       </div>
     </div>
   );
